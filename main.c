@@ -25,14 +25,14 @@ int calcGimatricValue(const char* text)
 
     return valueOfText;
 }
-char* atBash(char* word)
+char* atBash(char* word,unsigned long len)
 {
-    char* flipped = (char*)malloc(strlen(word));
+    char* flipped = (char*)malloc(sizeof (char) * (len+1));
     if(flipped == NULL)
     {
         exit(1);
     }
-    for(int i =0; i < strlen(word);i++)
+    for(int i =0; i < len;i++)
     {
         if(word[i] <= 'z' && word[i] >= 'a')
         {
@@ -51,19 +51,21 @@ char* atBash(char* word)
             flipped[i] = word[i];
         }
     }
+    flipped[len] = '\0';
     return flipped;
 }
-char* reverseString(char* word)
+char* reverseString(const char* word,unsigned long len)
 {
-    char* flipped = (char*)malloc(strlen(word));
+    char* flipped = (char*)malloc(sizeof (char) * (len+1));
     if(flipped == NULL)
     {
         exit(1);
     }
-    for(int i = 0;i < strlen(word);i++)
+    for(int i = 0;i < len;i++)
     {
-        flipped[i] = word[strlen(word)-i-1];
+        flipped[i] = word[len-i-1];
     }
+    flipped[len] = '\0';
     return flipped;
 }
 
@@ -88,8 +90,8 @@ int checkIdenctical(char* word1, char* word2)
 
 void secondFunction(char* word, char* text)
 {
-    char* bashed = atBash(word);
-    char* flipped = reverseString(bashed);
+    char* bashed = atBash(word,strlen(word));
+    char* flipped = reverseString(bashed, strlen(word));
     int counter = 0;
     int baseValue = calcGimatricValue(bashed);
     for(int i = 0; i < strlen(text); i++)
@@ -102,18 +104,21 @@ void secondFunction(char* word, char* text)
         }
         for(int j = strlen(first); j > 0;j--)
         {
-            char* currString = (char*)malloc(strlen(first));
+            char* currString = (char*)malloc(sizeof (char) * (j+1));
             if(currString == NULL)
             {
                 break;
             }
             strncpy(currString,first,j);
+            currString[j] = '\0';
             if((*(currString) > 'Z' || *(currString) < 'A')  && (*(currString) > 'z' || *(currString) < 'a'))
             {
+                free(currString);
                 continue;
             }
-            if((*(currString + strlen(currString)-1) > 'Z' || *(currString+ strlen(currString)-1) < 'A')  && (*(currString+ strlen(currString)-1) > 'z' || *(currString+ strlen(currString)-1) < 'a'))
+            if((*(currString + j-1) > 'Z' || *(currString+ j-1) < 'A')  && (*(currString+ j-1) > 'z' || *(currString+ j-1) < 'a'))
             {
+                free(currString);
                 continue;
             }
             int currValue = calcGimatricValue(currString);
@@ -182,18 +187,21 @@ void thirdFunction(char* word, char* text)
         }
         for(unsigned long j = strlen(first); j > 0;j--)
         {
-            char* currString = (char*)malloc(strlen(text));
+            char* currString = (char*)malloc(sizeof(char) * (j+1));
             if(currString == NULL)
             {
                 break;
             }
             strncpy(currString,first,j);
+            currString[j] = '\0';
             if((*(currString) > 'Z' || *(currString) < 'A')  && (*(currString) > 'z' || *(currString) < 'a'))
             {
+                free(currString);
                 continue;
             }
-            if((*(currString + strlen(currString)-1) > 'Z' || *(currString+ strlen(currString)-1) < 'A')  && (*(currString+ strlen(currString)-1) > 'z' || *(currString+ strlen(currString)-1) < 'a'))
+            if((*(currString + j-1) > 'Z' || *(currString+ j-1) < 'A')  && (*(currString+ j-1) > 'z' || *(currString+ j-1) < 'a'))
             {
+                free(currString);
                 continue;
             }
             int currValue = calcGimatricValue(currString);
@@ -231,7 +239,7 @@ void firstFunction(char* word, char* text)
         }
         for(unsigned long j = strlen(first); j > 0;j--)
         {
-            char* currString = (char*)malloc(strlen(text));
+            char* currString = (char*)malloc(sizeof (char) * (j+1));
             if(currString == NULL)
             {
                 break;
@@ -239,12 +247,15 @@ void firstFunction(char* word, char* text)
             strncpy(currString,first,j);
             if((*(currString) > 'Z' || *(currString) < 'A')  && (*(currString) > 'z' || *(currString) < 'a'))
             {
+                free(currString);
                 continue;
             }
-            if((*(currString + strlen(currString)-1) > 'Z' || *(currString+ strlen(currString)-1) < 'A')  && (*(currString+ strlen(currString)-1) > 'z' || *(currString+ strlen(currString)-1) < 'a'))
+            if(((currString[j-1] > 'Z' || currString[j-1] < 'A'))  && ((currString[j-1] > 'z' || currString[j-1] < 'a')))
             {
+                free(currString);
                 continue;
             }
+            currString[j] = '\0';
             int currValue = calcGimatricValue(currString);
             if(currValue == baseValue)
             {
